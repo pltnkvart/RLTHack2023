@@ -90,13 +90,7 @@ def prepare_items(response):
     return products
 
 
-def main():
-    category = input()
+def main(category):
     response = get_category(category)
     products = prepare_items(response)
-
     pd.DataFrame(products).to_csv('products.csv', index=False)
-
-
-if __name__ == '__main__':
-    main()

@@ -1,4 +1,5 @@
 import sqlite3
+from parserWB import *
 
 # Создаем подключение к базе данных (файл my_database.db будет создан)
 connection = sqlite3.connect('my_database.db')
@@ -95,7 +96,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
                 id = 0
             else:
                 id += 1
-            cursor.execute('INSERT INTO bdgroup VALUES (?, ?, ?)', (id, kod, name))
+            if cursor.execute('SELECT id FROM bdgroup WHERE kod = ?', (kod,)).fetchone() == None:
+                cursor.execute('INSERT INTO bdgroup VALUES (?, ?, ?)', (id, kod, name))
 
         elif lenght == 7:  
             id = cursor.execute('SELECT MAX(id) FROM subgroup').fetchone()[0]
@@ -108,7 +110,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-            cursor.execute('INSERT INTO subgroup VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT id FROM subgroup WHERE kod = ?', (kod,)).fetchone() == None:
+                cursor.execute('INSERT INTO subgroup VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
 
         elif lenght == 8:
             id = cursor.execute('SELECT MAX(id) FROM sort').fetchone()[0]
@@ -121,7 +124,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-            cursor.execute('INSERT INTO sort VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT id FROM sort WHERE kod = ?', (kod,)).fetchone() == None:
+                cursor.execute('INSERT INTO sort VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
         
         elif (lenght == 12 and kod[-1] == "0"):
             id = cursor.execute('SELECT MAX(id) FROM category').fetchone()[0]
@@ -134,7 +138,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-            cursor.execute('INSERT INTO category VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT id FROM category WHERE kod = ?', (kod,)).fetchone() == None:
+                cursor.execute('INSERT INTO category VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
 
         else:
             id = cursor.execute('SELECT MAX(id) FROM subcategory').fetchone()[0]
@@ -147,7 +152,15 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-            cursor.execute('INSERT INTO subcategory VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT id FROM subcategory WHERE kod = ?', (kod,)).fetchone() == None:
+                cursor.execute('INSERT INTO subcategory VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+
+
+if __name__ == '__main__':
+    categorys = cursor.execute('SELECT id, name FROM subcategory')
+    for category in categorys:
+        main(category[1])
+
 
 connection.commit()
 connection.close()
