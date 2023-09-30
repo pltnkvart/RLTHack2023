@@ -21,7 +21,7 @@ def get_safe_json_from_url(url: str):
 
 def get_all_products_in_search_result(category: str):
     products = []
-    for page in range(1, 101):
+    for page in range(1, 2):
         url = (f"https://search.wb.ru/exactmatch/ru/common/v4/search?"
                f"appType=1&curr=rub"
                f"&dest=-1029256,-102269,-2162196,-1257786"
@@ -90,6 +90,6 @@ def parse_response_to_products(response):
     return products_ret
 
 
-def main(category: str):
+def get_products_from_wb(category: str):
     products = get_all_products_in_search_result(category=category)
-    pd.DataFrame(products).to_csv('products.csv', index=False)
+    return products
