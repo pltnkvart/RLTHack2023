@@ -80,10 +80,10 @@ def parse_response_to_products(response):
             products_ret.append({
                 'brand': product.get('brand', ''),
                 'name': product.get('name', ''),
-                'id': product.get('id', ''),
-                'sale': product.get('sale', ''),
-                'priceU': float(product.get('priceU', 0)) / 100,
-                'salePriceU': float(product.get('salePriceU', 0)) / 100,
+                'id': product['id'],
+                'price': product.get('salePriceU', product.get('priceU', 0)) / 100,
+                'rating': product.get('reviewRating', 0),
+                'supplier': seller.get('supplierName', ''),
                 'inn': seller.get('inn', ''),
                 'ogrnip': seller.get('ogrnip', ''),
             })

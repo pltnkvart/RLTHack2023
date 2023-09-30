@@ -53,12 +53,14 @@ def get_product_info(url: list[str]):
              content.find(']', content.find('credentials')) + 1
              ].split('\\",\\"')  # 0 - seller, 1 - inn
     return {
-        'brand': seller[0],
+        'brand': product['brand'],
         'name': product['name'],
         'id': product['offers']['url'].split('-')[-1][:-1],
         'price': product['offers']['price'],
         'rating': product['aggregateRating']['ratingValue'],
+        'supplier': seller[0],
         'inn': seller[1],
+        'ogrnip': '',
     }
 
 
