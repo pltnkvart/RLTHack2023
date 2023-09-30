@@ -29,7 +29,11 @@ def get_all_products_in_search_result(category: str):
                f"&query={parse.quote(category)}&reg=0"
                f"&resultset=catalog&sort=popular&spp=0")
         response = get_safe_json_from_url(url=url)
-        products += parse_response_to_products(response=response)
+        products_curent = parse_response_to_products(response=response)
+        if len(products_curent) > 0:
+            products += products_curent
+        else:
+            break
     return products
 
 
