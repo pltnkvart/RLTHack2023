@@ -67,7 +67,7 @@ id_bdgroup INTEGER,
 name TEXT,
 inn TEXT,
 ogrn TEXT,
-stuf_reference TEXT
+product_reference TEXT
 )
 ''')
 
@@ -87,8 +87,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
         line = f.readline()
         if not line:
             break
-        kod = line[:line.find(',')]
-        name = line[(line.find(',') + 2):]
+        kod = line[:line.find(';')]
+        name = line[(line.find(';') + 2):]
         lenght = len(kod)
 
         if lenght == 5:
@@ -97,8 +97,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
                 id = 0
             else:
                 id += 1
-#            if cursor.execute('SELECT id FROM bdgroup WHERE kod = ?', (kod,)).fetchone()[0] == None:
-            cursor.execute('INSERT INTO bdgroup VALUES (?, ?, ?)', (id, kod, name))
+            if cursor.execute('SELECT COUNT(1) FROM bdgroup WHERE kod = ?', (kod,)).fetchone()[0] == 0:
+                cursor.execute('INSERT INTO bdgroup VALUES (?, ?, ?)', (id, kod, name))
 
         elif lenght == 7:  
             id = cursor.execute('SELECT MAX(id) FROM subgroup').fetchone()[0]
@@ -111,8 +111,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-#            if cursor.execute('SELECT id FROM subgroup WHERE kod = ?', (kod,)).fetchone() == None:
-            cursor.execute('INSERT INTO subgroup VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT COUNT(1) FROM subgroup WHERE kod = ?', (kod,)).fetchone()[0] == 0:
+                cursor.execute('INSERT INTO subgroup VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
 
         elif lenght == 8:
             id = cursor.execute('SELECT MAX(id) FROM sort').fetchone()[0]
@@ -125,8 +125,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-            #if cursor.execute('SELECT id FROM sort WHERE kod = ?', (kod,)).fetchone() == None:
-            cursor.execute('INSERT INTO sort VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT COUNT(1) FROM sort WHERE kod = ?', (kod,)).fetchone()[0] == 0:
+                cursor.execute('INSERT INTO sort VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
         
         elif (lenght == 12 and kod[-1] == "0"):
             id = cursor.execute('SELECT MAX(id) FROM category').fetchone()[0]
@@ -139,8 +139,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-            #if cursor.execute('SELECT id FROM category WHERE kod = ?', (kod,)).fetchone() == None:
-            cursor.execute('INSERT INTO category VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT COUNT(1) FROM category WHERE kod = ?', (kod,)).fetchone()[0] == 0:
+                cursor.execute('INSERT INTO category VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
 
         else:
             id = cursor.execute('SELECT MAX(id) FROM subcategory').fetchone()[0]
@@ -153,8 +153,8 @@ with open('ОКПД2.txt', 'r', encoding="utf8") as f:
             id_prev = cursor.fetchone()
             if id_prev == None:
                 id_prev = [-1]
-            #if cursor.execute('SELECT id FROM subcategory WHERE kod = ?', (kod,)).fetchone() == None:
-            cursor.execute('INSERT INTO subcategory VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
+            if cursor.execute('SELECT COUNT(1) FROM subcategory WHERE kod = ?', (kod,)).fetchone()[0] == 0:
+                cursor.execute('INSERT INTO subcategory VALUES (?, ?, ?, ?)', (id, id_prev[0], kod, name))
 
 
 if __name__ == '__main__':
@@ -172,6 +172,7 @@ if __name__ == '__main__':
             price = product.get('priceU')
             inn = product.get('inn')
             ogrn = product.get('ogrnip')
+            product_reference = "https://www.wildberries.ru/catalog/" + str(product.get('id')) + "/detail.aspx"
             id_subcategory = category[0]
             prev = cursor.execute('SELECT id, id_prev FROM category WHERE id = ?', (category[1],)).fetchone()
             id_category = prev[0]
@@ -181,13 +182,15 @@ if __name__ == '__main__':
             id_subgroup = prev[0]
             id_bdgroup = prev[1]
 
-
-            print(id, id_subcategory, id_category, id_sort, id_subgroup, id_bdgroup, product_name, provider, price, inn, ogrn)
-
-
-            #if cursor.execute('SELECT id FROM products WHERE (inn = ? OR ogrn = ?) AND name = ?', (inn,), (ogrn,), (name,),).fetchone() == None:
-            cursor.execute('''INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (id, id_subcategory, id_category, id_sort, id_subgroup, id_bdgroup, product_name, inn, ogrn, "1234567890"))
-
+            if ((len(inn) != 0 or len(ogrn) != 0) and cursor.execute('SELECT COUNT(1) FROM products WHERE (inn = ? OR ogrn = ?) AND name = ?', (inn, ogrn, product_name)).fetchone()[0] == 0):
+                cursor.execute('''INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (id, id_subcategory, id_category, id_sort, id_subgroup, id_bdgroup, product_name, inn, ogrn, product_reference))
+            if cursor.execute('SELECT COUNT(1) FROM provider WHERE inn = ? OR ogrn = ?', (inn, ogrn)).fetchone()[0] == 0:
+                id = cursor.execute('SELECT MAX(id) FROM provider').fetchone()[0]
+                if id == None:
+                    id = 0
+                else:
+                    id += 1
+                cursor.execute('''INSERT INTO provider VALUES (?, ?, ?, ?)''', (id, inn, ogrn, provider))
 
 
 

@@ -10,10 +10,16 @@ app = Flask(__name__)
 connection = sqlite3.connect('my_database.db')
 cursor = connection.cursor()
 
-@app.route('/')
+@app.route('/', methods = ['POST', 'GET'])
 def index():
-    startups = db.session.query(Startup).order_by(Startup.id.desc()).all()
-    if current_user.is_authenticated:
-        return render_template('index.html', data = startups, user_authenticated = 1, user_id = current_user.id)
+    if request.method == 'POST':
+        search = request.form['search']
+
+        products = []
+        return render_template('index.html', products)
     else:
-        return render_template('index.html', data = startups, user_authenticated = 0)
+        return render_template('index.html')
+
+
+if __name__ == "__main__":
+    app.run()
