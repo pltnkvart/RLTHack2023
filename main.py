@@ -36,19 +36,9 @@ def index():
     products = []
     if request.method == 'POST':
         search = request.form['search']
-        categories = find_categories(search)
-        for kod in categories:
-            lenght =  len(kod)
-            if (lenght == 12 and kod[-1] == "0"):
-                id_category = query_db('SELECT * FROM category WHERE kod = ?', [kod])
-            elif (lenght == 12):
-                id_category = query_db('SELECT * FROM subcategory WHERE kod = ?', [kod])
-
-            for id in id_category:
-                find_products = query_db('SELECT * FROM products WHERE id_subcategory = ? ORDER BY rating DESC', [id[0]])
-                for product in find_products:
-                    products.append(product)
-
+        words = find_categories(search)
+        all_products = query_db('SELECT * FROM products ORDER BY rating DESC')
+        products = find_code_and_name(words, all_products)
         index = 1
         for i in range(len(products)):
             find_providers = query_db('SELECT * FROM provider WHERE inn = ? or ogrn = ?', (products[i][7], products[i][8]))
