@@ -8,8 +8,8 @@ headers = {'User-Agent': 'My Python script'}
 search_keyword = input("Введите ключевое слово: ")
 
 params = dict(
-    s = search_keyword,
-    format ="json",
+    s=search_keyword,
+    format="json",
 )
 
 arr = []
@@ -46,21 +46,31 @@ for line in lines:
 
 def find_code_and_name(arr):
     results = []
+    added_codes = set()
     for code, name in code_to_name.items():
         for keyword in arr:
-            if keyword.lower() in name.lower():
+            if keyword.lower() in name.lower() and code not in added_codes:
                 results.append((code, name))
+                added_codes.add(code)
     return results
 
 
 results = find_code_and_name(arr)
+arrCodes = []
 
 if results:
     print("Найдены совпадения:")
     for code, name in results:
         print(f"{code} - {name}")
+        arrCodes.append(code)
 else:
     print("Совпадений не найдено.")
 
 
+def count_dots(item):
+    return item.count('.')
+
+arrCodes = sorted(arrCodes, key=count_dots, reverse=True)
+
+print(arrCodes)
 
