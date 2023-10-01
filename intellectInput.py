@@ -1,5 +1,6 @@
 import requests
 import json
+import pymorphy2
 
 def find_code_and_name(words, all_products):
     correct_products = []
@@ -15,10 +16,16 @@ def count_dots(item):
 
 
 def make_words(search_keyword):
+    morph = pymorphy2.MorphAnalyzer()
+    singular_word = morph.parse(search_keyword)[0]
+    singular_word = singular_word.normal_form
+
+    print(singular_word)
+
     url = "https://ws3.morpher.ru/russian/declension"
     headers = {'User-Agent': 'My Python script'}
     params = dict(
-        s=search_keyword,
+        s=singular_word,
         format="json",
     )
     arr = []

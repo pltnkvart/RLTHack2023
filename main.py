@@ -30,7 +30,6 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-
 @app.route('/', methods = ['POST', 'GET'])
 def index():
     products = []
@@ -39,9 +38,6 @@ def index():
         products = query_db('SELECT * FROM products ORDER BY rating DESC')
         for word in search.split(' '): 
             words = make_words(word)
-
-            print(words)
-
             products = find_code_and_name(words, products)
         index = 1
         for i in range(len(products)):
@@ -50,7 +46,6 @@ def index():
                 products[i] = products[i] + (provider[3],)
             products[i] = products[i] + (index,)
             index += 1
-        
         return render_template('index.html', products = products)
     else:
         return render_template('index.html', products = products)
