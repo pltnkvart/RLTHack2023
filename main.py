@@ -36,9 +36,13 @@ def index():
     products = []
     if request.method == 'POST':
         search = request.form['search']
-        words = find_categories(search)
-        all_products = query_db('SELECT * FROM products ORDER BY rating DESC')
-        products = find_code_and_name(words, all_products)
+        products = query_db('SELECT * FROM products ORDER BY rating DESC')
+        for word in search.split(' '): 
+            words = make_words(word)
+
+            print(words)
+
+            products = find_code_and_name(words, products)
         index = 1
         for i in range(len(products)):
             find_providers = query_db('SELECT * FROM provider WHERE inn = ? or ogrn = ?', (products[i][7], products[i][8]))
