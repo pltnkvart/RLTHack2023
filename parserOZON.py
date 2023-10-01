@@ -67,6 +67,9 @@ def get_product_info(url: list[str]):
 def get_products_from_ozon(category: str):
     links = get_products_from_category(category=category)
     products = []
+    i = 0
     for link in links:
         products.append(get_product_info(url=link))
+        i += 1
+        print(i)
     return products

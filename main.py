@@ -14,8 +14,7 @@ cursor = connection.cursor()
 def index():
     if request.method == 'POST':
         search = request.form['search']
-
-        products = []
+        products = 
         return render_template('index.html', products)
     else:
         return render_template('index.html')
@@ -23,3 +22,6 @@ def index():
 
 if __name__ == "__main__":
     app.run()
+
+connection.commit()
+connection.close()
