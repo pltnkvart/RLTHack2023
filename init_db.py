@@ -186,6 +186,9 @@ def pars_wb(categories):
             id_subgroup = prev[0]
             id_bdgroup = prev[1]
             flag = cursor.execute('SELECT COUNT(1) FROM products WHERE (inn = ? OR ogrn = ?) AND name = ?', (inn, ogrn, product_name)).fetchone()[0]
+            
+            print(id, product_name)
+            
             if len(inn) != 0 or len(ogrn) != 0:
                 if flag == 0:
                     cursor.execute('''INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (id, id_subcategory, id_category, id_sort, id_subgroup, id_bdgroup, product_name, inn, ogrn, price, rating, product_reference))
@@ -248,6 +251,9 @@ def pars_ozon(categories):
             id_subgroup = prev[0]
             id_bdgroup = prev[1]
             flag = cursor.execute('SELECT COUNT(1) FROM products WHERE (inn = ? OR ogrn = ?) AND name = ?', (inn, ogrn, product_name)).fetchone()[0]
+            
+            print(id, product_name)
+            
             if len(inn) != 0 or len(ogrn) != 0:
                 if flag == 0:
                     cursor.execute('''INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''', (id, id_subcategory, id_category, id_sort, id_subgroup, id_bdgroup, product_name, inn, ogrn, price, rating, product_reference))

@@ -19,9 +19,6 @@ def make_words(search_keyword):
     morph = pymorphy2.MorphAnalyzer()
     singular_word = morph.parse(search_keyword)[0]
     singular_word = singular_word.normal_form
-
-    print(singular_word)
-
     url = "https://ws3.morpher.ru/russian/declension"
     headers = {'User-Agent': 'My Python script'}
     params = dict(
