@@ -42,8 +42,11 @@ def index():
         index = 1
         for i in range(len(products)):
             find_providers = query_db('SELECT * FROM provider WHERE inn = ? or ogrn = ?', (products[i][7], products[i][8]))
+            find_kod = query_db('SELECT * FROM subcategory WHERE id = ?', (products[i][1],))
             for provider in find_providers:
                 products[i] = products[i] + (provider[3],)
+            for kod in find_kod:
+                products[i] = products[i] + (kod[2],)
             products[i] = products[i] + (index,)
             index += 1
         return render_template('index.html', products = products)

@@ -51,20 +51,21 @@
                     <th scope="col">ОГРН</th>
                     <th scope="col">Рейтинг продавца</th>
                     <th scope="col">Ссылка на товар</th>
-                    
+                    <th scope="col">ОКПД2</th>
                 </tr>
             </thead>
             <tbody>
                 {% for product in products %}
                     <tr>
-                        <th scope="row">{{product[13]}}</th>
+                        <th scope="row">{{product[14]}}</th>
                         <td>{{product[6]}}</td>
                         <td>{{product[9]}}</td>
                         <td>{{product[12]}}</td>
                         <td>{{product[7]}}</td>
                         <td>{{product[8]}}</td>
                         <td>{{product[10]}}</td>
-                        <td><a href="{{product[11]}}">Ссылка на товара</a></td>
+                        <td><a href="{{product[11]}}">Ссылка на товар</a></td>
+                        <td>{{product[13]}}</td>
                     </tr>
                 {% endfor %}
             </tbody>
