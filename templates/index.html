@@ -30,11 +30,13 @@
     </header>
 
     <div class="containerMain">
-        <div class="mb-3">
-            <label for="search" class="form-label">Поиск</label>
-            <input type="search" name="search" id="search" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <form method="post" id="findForm">
+            <div class="mb-3">
+                <label for="search" class="form-label">Поиск</label>
+                <input type="search" name="search" id="search" class="form-control" required>
+            </div>
+            <input type="submit" class="btn btn-primary" value="find">Submit</button>
+        </form>
     </div>
 
     <div class="containerMain">
@@ -44,7 +46,6 @@
                     <th scope="col">№</th>
                     <th scope="col">Название</th>
                     <th scope="col">Цена</th>
-                    <th scope="col">Артикул</th>
                     <th scope="col">Поставищик</th>
                     <th scope="col">ИНН</th>
                     <th scope="col">ОГРН</th>
@@ -54,19 +55,18 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- ТОВАР -->
-                <tr>
-                    <th scope="row">1</th>
-                    <td>"Название товара"</td>
-                    <td>"Цена"</td>
-                    <td>"10101010"</td>
-                    <td>"ИП Говно Говно"</td>
-                    <td>"123456"</td>
-                    <td>"987654"</td>
-                    <td>"5.0"</td>
-                    <td><a href="">Ссылка на товара</a></td>
-                </tr>
-                <!-- ТОВАР -->
+                {% for product in products %}
+                    <tr>
+                        <th scope="row">{{product[13]}}</th>
+                        <td>{{product[6]}}</td>
+                        <td>{{product[9]}}</td>
+                        <td>{{product[12]}}</td>
+                        <td>{{product[7]}}</td>
+                        <td>{{product[8]}}</td>
+                        <td>{{product[10]}}</td>
+                        <td><a href="{{product[11]}}">Ссылка на товара</a></td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>
